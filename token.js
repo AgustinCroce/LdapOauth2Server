@@ -29,8 +29,7 @@ exports.info = [
         if (req.query.access_token) {
             db
                 .accessTokens
-                .model
-                .find(req.query.access_token)
+                .findByToken(req.query.access_token)
                 .populate('userID')
                 .exec(function(err, token) {
                     if (err || !token[0]) {

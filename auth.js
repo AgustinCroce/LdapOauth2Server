@@ -2,37 +2,12 @@
 'use strict';
 
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
 var ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 var WindowsStrategy = require('passport-windowsauth');
 var config = require('./config');
 var db = require('./' + config.db.type);
-var users = [];
-/**
- * LocalStrategy
- *
- * This strategy is used to authenticate users based on a username and password.
- * Anytime a request is made to authorize an application, we must ensure that
- * a user is logged in before asking them to approve the request.
- */
-passport.use(new LocalStrategy(
-    function(username, password, done) {
-        db.users.findByUsername(username, function(err, user) {
-            if (err) {
-                return done(err);
-            }
-            if (!user) {
-                return done(null, false);
-            }
-            if (user[0].password !== password) {
-                return done(null, false);
-            }
-            return done(null, user[0]);
-        });
-    }
-));
 
 /**
  * BasicStrategy & ClientPasswordStrategy
@@ -73,7 +48,6 @@ passport.use(new BasicStrategy(
 passport.use(new ClientPasswordStrategy(
     function(clientId, clientSecret, done) {
         db.clients.findByClientId(clientId, function(err, client) {
-
             if (err) {
                 return done(err);
             }
@@ -155,12 +129,19 @@ passport.use(new WindowsStrategy({
         integrated: false
     },
     function(profile, done) {
-        console.log(profile);
-        db.users.insert({
-            id         : profile.id,
-            displayName: profile.displayName,
-            emails     : profile.emails
-        }, done)
+        db.users.find({
+            id: profile.id
+        }, function(err, users) {
+            if (users.length === 1) {
+                done(null, users[0]);
+            } else {
+                db.users.create({
+                    id         : profile.id,
+                    displayName: profile.displayName,
+                    emails     : profile.emails
+                }, done)
+            }
+        });
     }));
 
 // Register serialialization and deserialization functions.
@@ -168,7 +149,6 @@ passport.use(new WindowsStrategy({
 // When a client redirects a user to user authorization endpoint, an
 // authorization transaction is initiated.  To complete the transaction, the
 // user must authenticate and approve the authorization request.  Because this
-// may involve multiple HTTPS request/response exchanges, the transaction is
 // stored in the session.
 //
 // An application must supply serialization functions, which determine how the
@@ -178,18 +158,14 @@ passport.use(new WindowsStrategy({
 
 
 passport.serializeUser(function(user, done) {
-    console.log(user);
     done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-    console.log(id);
     db.users
         .find({id: id})
         .limit(1)
         .exec(function(err, user) {
-            console.log(err);
-            console.log(user);
             if (err) {
                 done(err, null);
             } else {

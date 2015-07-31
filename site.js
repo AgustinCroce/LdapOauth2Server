@@ -8,29 +8,29 @@ var passport = require('passport');
 var login = require('connect-ensure-login');
 
 exports.index = function (req, res) {
-  if (!req.query.code) {
-    res.render('index');
-  } else {
-    res.render('index-with-code');
-  }
+    if (!req.query.code) {
+        res.render('index');
+    } else {
+        res.render('index-with-code');
+    }
 };
 
 exports.loginForm = function (req, res) {
-  res.render('login');
+    res.render('login');
 };
 
 exports.login = [
-  passport.authenticate('WindowsAuthentication', {successReturnToOrRedirect: '/', failureRedirect: '/login'})
+    passport.authenticate('WindowsAuthentication', {successReturnToOrRedirect: '/', failureRedirect: '/login'})
 ];
 
 exports.logout = function (req, res) {
-  req.logout();
-  res.redirect('/');
+    req.logout();
+    res.redirect('/');
 };
 
 exports.account = [
-  login.ensureLoggedIn(),
-  function (req, res) {
-    res.render('account', {user: req.user});
-  }
+    login.ensureLoggedIn(),
+    function (req, res) {
+        res.render('account', {user: req.user});
+    }
 ];

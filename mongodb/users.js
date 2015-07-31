@@ -22,8 +22,6 @@ var UserSchema = new mongoose.Schema({
              }]
 });
 
-var User = mongoose.model('User', UserSchema);
-
 /**
  * Returns a user if it finds one, otherwise returns
  * null if a user is not found.
@@ -32,8 +30,8 @@ var User = mongoose.model('User', UserSchema);
  * @returns The user if found, otherwise returns null
  */
 
-exports.find = function(id, done){
-    User.find({id: id}, done);
+UserSchema.find = function(id, done){
+    this.find({id: id}, done);
 };
 
 /**
@@ -43,8 +41,8 @@ exports.find = function(id, done){
  * @param done The function to call next
  * @returns The user if found, otherwise returns null
  */
-exports.findByUsername = function(username, done) {
-    User.find({username: username}, done);
+UserSchema.findByUsername = function(username, done) {
+    this.find({username: username}, done);
 };
 
-exports.model = User;
+module.exports = mongoose.model('User', UserSchema);

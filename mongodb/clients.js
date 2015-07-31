@@ -35,10 +35,10 @@ var ClientSchema = new mongoose.Schema({
  * @param id The unique id of the client to find
  * @param done The function to call next
  * @returns The client if found, otherwise returns null
- */
-ClientSchema.statics.find = function find(id, done) {
-    return this.find({id: id}, done);
-};
+*/
+//ClientSchema.statics.find = function find(id, done) {
+//    return this.find({id: id}, done);
+//};
 
 /**
  * Returns a client if it finds one, otherwise returns

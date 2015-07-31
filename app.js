@@ -60,8 +60,8 @@ app.post('/login', site.login);
 app.get('/logout', site.logout);
 app.get('/account', site.account);
 
-app.get('/oauth/authorize', oauth2.authorization);
-app.post('/oauth/authorize/decision', oauth2.decision);
+app.get('/dialog/authorize', oauth2.authorization);
+app.post('/dialog/authorize/decision', oauth2.decision);
 app.post('/oauth/token', oauth2.token);
 
 app.get('/api/userinfo', user.info);
@@ -70,6 +70,7 @@ app.get('/api/clientinfo', client.info);
 // Mimicking google's token info endpoint from
 // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
 app.get('/api/tokeninfo', token.info);
+
 
 //static resources for stylesheets, images, javascript files
 app.use(express.static(path.join(__dirname, 'public')));
