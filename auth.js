@@ -22,6 +22,7 @@ var db = require('./' + config.db.type);
  */
 passport.use(new BasicStrategy(
     function(username, password, done) {
+        console.log(username, password);
         db.clients.findByClientId(username, function(err, client) {
             if (err) {
                 return done(err);
@@ -47,6 +48,7 @@ passport.use(new BasicStrategy(
  */
 passport.use(new ClientPasswordStrategy(
     function(clientId, clientSecret, done) {
+        console.log(clientId, clientSecret);
         db.clients.findByClientId(clientId, function(err, client) {
             if (err) {
                 return done(err);
@@ -123,8 +125,8 @@ passport.use(new WindowsStrategy({
         ldap      : {
             url            : "ldap://10.1.0.45:389",
             base           : "dc=exo,dc=local",
-            bindDN         : "agustinc@exo.local",
-            bindCredentials: "4643.a1721"
+            bindDN         : "user@exo.local",
+            bindCredentials: "pass"
         },
         integrated: false
     },
