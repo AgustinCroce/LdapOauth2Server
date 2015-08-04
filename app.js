@@ -1,4 +1,6 @@
 /*jslint node: true */
+/* global require */
+
 'use strict';
 var mongoose = require('mongoose');
 var config = require('./config');
@@ -6,8 +8,6 @@ var express = require('express');
 var passport = require('passport');
 var site = require('./site');
 var oauth2 = require('./oauth2');
-var user = require('./user');
-var client = require('./client');
 var token = require('./token');
 var https = require('https');
 var cookieParser = require('cookie-parser');
@@ -54,18 +54,13 @@ app.use(passport.session());
 // Passport configuration
 require('./auth');
 
-app.get('/', site.index);
 app.get('/login', site.loginForm);
 app.post('/login', site.login);
 app.get('/logout', site.logout);
-app.get('/account', site.account);
 
 app.get('/dialog/authorize', oauth2.authorization);
 app.post('/dialog/authorize/decision', oauth2.decision);
 app.post('/oauth/token', oauth2.token);
-
-app.get('/api/userinfo', user.info);
-app.get('/api/clientinfo', client.info);
 
 // Mimicking google's token info endpoint from
 // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken

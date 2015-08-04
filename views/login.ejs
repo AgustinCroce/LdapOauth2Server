@@ -2,56 +2,41 @@
 <html>
 
 <head>
-  <title>OAuth2Orize Recipes Login</title>
-  <!-- Needed for mobile sites to work -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth2Orize Recipes Login</title>
+    <!-- Needed for mobile sites to work -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Style sheets -->
-  <link rel="stylesheet" type="text/css" href="stylesheets/pure-min.css">
-  <link rel="stylesheet" type="text/css" href="stylesheets/base.css">
-  <link rel="stylesheet" type="text/css" href="stylesheets/sign-in-modules.css">
+    <!-- Style sheets -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
 
 <!-- HTML login screen form -->
-<form action="/login" method="post" class="pure-form pure-form-stacked">
-  <fieldset>
-    <!-- Upper box with Title, username, and password -->
-    <div class="upper-box">
-      <!-- Title -->
-      <div>
-        <h1 class="title-padding">Authorization Server</h1>
-      </div>
-      <div class="pure-control-group">
-        <!-- Username label and input -->
-        <label class="labels" for="name">Username:</label>
-
-        <div class="input-fields">
-          <input class="pure-input-1 input-fields" id="name" type="text" placeholder="Hint: bob" name="username"/>
+<form action="/login" method="post" class="container" role="form">
+    <div class="container">
+        <div class="text-center">
+            <h1>Authorization Server</h1>
         </div>
-      </div>
-      <div class="pure-control-group">
-        <!-- Password label and input -->
-        <label class="labels" for="password">Password:</label>
 
-        <div class="input-fields">
-          <input class="pure-input-1 input-fields" id="password" type="password" placeholder="Hint: secret"
-                 name="password"/>
+        <div class="form-group input-group col-xs-offset-4 col-xs-4">
+            <label for="name">Username:</label>
+            <input class="form-control" id="name" type="text" placeholder="Your ldap user" name="username"/>
         </div>
-      </div>
+
+        <div class="form-group input-group col-xs-offset-4 col-xs-4">
+            <label for="password">Password:</label>
+            <input class="form-control" id="password" type="password" placeholder="Your ldap password" name="password"/>
+        </div>
+
+        </br>
+
+        <div class="col-xs-offset-7">
+            <button type="submit" class="btn btn-info col-xs-4" value="Submit">Sign in</button>
+        </div>
+
     </div>
-    <!-- Bottom box with Sign in -->
-    <div class="bottom-box">
-      <div class="pure-controls sign-in-button">
-        <button type="submit" value="Submit" class="pure-button pure-button-primary">Sign in</button>
-      </div>
-    </div>
-  </fieldset>
-  <div class="from-text">
-    <a href="https://github.com/FrankHassanabad/Oauth2orizeRecipes">
-      From OAuth2OrizeRecipes
-    </a>
-  </div>
 </form>
 
 </body>
