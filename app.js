@@ -16,6 +16,7 @@ var fs = require('fs');
 var expressSession = require("express-session");
 var path = require('path');
 var cors = require('cors');
+var AccessTokens = require('./mongodb').accessTokens;
 
 mongoose.connect('mongodb://localhost:27017/Oauth');
 
@@ -38,12 +39,12 @@ app.use(cors());
 
 //Session Configuration
 app.use(expressSession({
-  saveUninitialized: true,
-  resave: true,
-  secret: config.session.secret,
-  store: sessionStorage,
-  key: "authorization.sid",
-  cookie: {maxAge: config.session.maxAge}
+    saveUninitialized: true,
+    resave           : true,
+    secret           : config.session.secret,
+    store            : sessionStorage,
+    key              : "authorization.sid",
+    cookie           : {maxAge: config.session.maxAge}
 }));
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -73,23 +74,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Catch all for error messages.  Instead of a stack
 // trace, this will log the json of the error message
 // to the browser and pass along the status with it
-app.use(function (err, req, res, next) {
-  if (err) {
-    res.status(err.status);
-    res.json(err);
-  } else {
-    next();
-  }
+app.use(function(err, req, res, next) {
+    if (err) {
+        res.status(err.status);
+        res.json(err);
+    } else {
+        next();
+    }
 });
 
 //From time to time we need to clean up any expired tokens
 //in the database
-setInterval(function () {
-  db.accessTokens.removeExpired(function (err) {
-    if (err) {
-      console.error("Error removing expired tokens");
-    }
-  });
+setInterval(function() {
+    console.log("Deleting accessTokens");
+    AccessTokens.removeExpired(function(err) {
+        if (err) {
+            console.error("Error removing expired tokens");
+        }
+        console.log("Access tokens deleted");
+    });
 }, config.db.timeToCheckExpiredTokens * 1000);
 
 //TODO: Change these for your own certificates.  This was generated
@@ -98,8 +101,8 @@ setInterval(function () {
 //openssl req -new -key privatekey.pem -out certrequest.csr
 //openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
 var options = {
-  key: fs.readFileSync('certs/privatekey.pem'),
-  cert: fs.readFileSync('certs/certificate.pem')
+    key : fs.readFileSync('certs/privatekey.pem'),
+    cert: fs.readFileSync('certs/certificate.pem')
 };
 
 // Create our HTTPS server listening on port 3000.
